@@ -1,28 +1,76 @@
 <div>
-  <div *ngFor="let pokemon of pokemons" class="list-container">
-    <div class="pokemon-container">
-      <div>
-        <img src="{{ pokemon.sprites.front_default }}" alt="" />
-        <h1>{{ pokemon.name }}</h1>
-      </div>
-
-      <div>
-        <p>Type: {{ pokemon.types[0].type.name }}</p>
-        <p>Height: {{ pokemon.height }}</p>
-        <p>Life: {{ pokemon.stats[0].base_stat }}</p>
-        <p>Attack: {{ pokemon.stats[1].base_stat }}</p>
-        <p>Defense: {{ pokemon.stats[2].base_stat }}</p>
-      </div>
+  <div class="container">
+    <div>
+      <input
+        type="text"
+        placeholder="Enter a pokemon name - at least three letters"
+        #searchPokemonName
+      />
+      <button
+        *ngIf="status === 'ready' || 'search'"
+        (click)="searchPokemon(searchPokemonName.value)"
+        id="search-button"
+        class="btn btn-white btn- animate"
+      >
+        Search
+      </button>
     </div>
   </div>
+  <div class="container" *ngIf="status == 'loading'">
+    <h2>loading...</h2>
+  </div>
 
-  <div class="container">
-    <button
-      (click)="loadMorePokemons()"
-      id="load-more"
-      class="btn btn-white btn- animate"
-    >
-      Load more
-    </button>
+  <div class="container" *ngIf="viewPokemon.length == 0">
+    No pokemon found :(
+  </div>
+
+  <div *ngIf="status == 'error'" id="error-message" class="container">
+    <h2>An error has ocurred :( Reload the page and try again</h2>
+  </div>
+
+  <div *ngIf="status == 'ready' || status == 'search'">
+    <div *ngFor="let pokemon of viewPokemon" class="list-container">
+      <div class="pokemon-container">
+        <div>
+          <img
+            id="pokemon-img"
+            src="{{ pokemon.sprites.front_default }}"
+            alt=""
+          />
+          <h1>{{ pokemon.name }}</h1>
+        </div>
+
+        <div>
+          <p>Type: {{ pokemon.types[0].type.name }}</p>
+          <p id="height-line">Height: {{ pokemon.height }}</p>
+          <p id="life-line">Life: {{ pokemon.stats[0].base_stat }}</p>
+          <p id="attack-line">Attack: {{ pokemon.stats[1].base_stat }}</p>
+          <p id="defense-line">Defense: {{ pokemon.stats[2].base_stat }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <button
+        *ngIf="buttonStatus === 'ready' && view == ''"
+        (click)="loadMorePokemons()"
+        id="load-more"
+        class="btn btn-white btn- animate"
+      >
+        Load more
+      </button>
+
+      <button
+        id="clean-search"
+        *ngIf="view === 'search'"
+        (click)="cleanSearch()"
+        id="search-button"
+        class="btn btn-white btn- animate"
+      >
+        Clean Search
+      </button>
+
+      <h2 *ngIf="buttonStatus === 'loading'">Loading...</h2>
+    </div>
   </div>
 </div>

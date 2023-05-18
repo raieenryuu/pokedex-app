@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiResponse, Pokemon } from './types/pokemon-types';
+import { ApiResponse, Pokemon, Result } from './types/pokemon-types';
 import axios from 'axios';
 
 @Injectable({
@@ -10,18 +10,39 @@ export class PokemonDataService {
 
   private limit = 9;
 
-  async getPokemons(offset: number) {
-    let pokemons: Pokemon[] = [];
-    const response = await axios.get<ApiResponse>(
-      `${this.url}?offset=${offset}&limit=${this.limit}`
-    );
+  async getPokemons(offset: number, pokemonUrls: ApiResponse | null) {
+    if (pokemonUrls) {
+      let pokemons: Pokemon[] = [];
 
-    for (let pokemonUrl of response.data.results) {
-      await axios
-        .get<Pokemon>(pokemonUrl.url)
-        .then((res) => pokemons.push(res.data));
+      for (let i = offset; i < offset + 9; i++) {
+        await axios
+          .get<Pokemon>(pokemonUrls.results[i].url)
+          .then((res) => pokemons.push(res.data));
+      }
+
+      return pokemons;
     }
 
+    return [];
+  }
+
+  async getAllPokemonUrls() {
+    let urls = await axios.get<ApiResponse>(
+      `${this.url}?offset=0&limit=${1281}`
+    );
+
+    return urls.data;
+  }
+
+  async getPokemonsByUrls(urls: Result[] | undefined) {
+    let pokemons: Pokemon[] = [];
+
+    if (!urls) {
+      return pokemons;
+    }
+    for (let url of urls) {
+      await axios.get<Pokemon>(url.url).then((res) => pokemons.push(res.data));
+    }
     return pokemons;
   }
 }

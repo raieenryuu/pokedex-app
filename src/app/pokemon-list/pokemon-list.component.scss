@@ -18,6 +18,7 @@
 .container {
   display: flex;
   justify-content: center;
+  margin-top: 4px;
 }
 
 #load-more {
@@ -38,4 +39,60 @@
   position: relative;
   top: 10px;
   box-shadow: none;
+}
+
+#search-button {
+  margin-left: 5px;
+  line-height: 40px;
+  font-weight: bold;
+  font-size: large;
+  color: black;
+  padding: 0 40px;
+  background: lightcoral;
+  border: 3px solid black;
+  border-radius: 40px;
+  box-shadow: 0 5px 20px 3px rgba(0, 0, 0, 0.6);
+}
+#search-button:hover {
+  background: g;
+  color: white;
+}
+
+input {
+  margin-bottom: 30px;
+  border: 3px solid #003060;
+  border-radius: 30px;
+  width: 400px;
+  height: 40px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+#attack-line {
+  color: red;
+}
+
+#life-line {
+  color: green;
+}
+
+#defense-line {
+  color: blue;
+}
+
+#height-line {
+  color: #8913c0;
+}
+
+#pokemon-img {
+  width: 150px;
+}
+
+#error-message {
+  color: red;
 }
