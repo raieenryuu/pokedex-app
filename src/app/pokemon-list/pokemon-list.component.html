@@ -1,0 +1,28 @@
+<div>
+  <div *ngFor="let pokemon of pokemons" class="list-container">
+    <div class="pokemon-container">
+      <div>
+        <img src="{{ pokemon.sprites.front_default }}" alt="" />
+        <h1>{{ pokemon.name }}</h1>
+      </div>
+
+      <div>
+        <p>Type: {{ pokemon.types[0].type.name }}</p>
+        <p>Height: {{ pokemon.height }}</p>
+        <p>Life: {{ pokemon.stats[0].base_stat }}</p>
+        <p>Attack: {{ pokemon.stats[1].base_stat }}</p>
+        <p>Defense: {{ pokemon.stats[2].base_stat }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <button
+      (click)="loadMorePokemons()"
+      id="load-more"
+      class="btn btn-white btn- animate"
+    >
+      Load more
+    </button>
+  </div>
+</div>
