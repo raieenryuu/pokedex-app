@@ -10,7 +10,13 @@ import { PokemonListModule } from './pokemon-list/pokemon-list.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, PokemonModule, PokemonListModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    PokemonModule,
+    PokemonListModule,
+    AppRoutingModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

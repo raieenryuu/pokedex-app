@@ -1,20 +1,21 @@
 <div>
   <div class="container">
-    <div>
+    <form (ngSubmit)="handleSubmit($event, searchPokemonName.value)">
       <input
         type="text"
         placeholder="Enter a pokemon name - at least three letters"
+        (keyup)="handleKeyUp($event, searchPokemonName.value)"
         #searchPokemonName
       />
       <button
+        type="submit"
         *ngIf="status === 'ready' || 'search'"
-        (click)="searchPokemon(searchPokemonName.value)"
         id="search-button"
         class="btn btn-white btn- animate"
       >
         Search
       </button>
-    </div>
+    </form>
   </div>
   <div class="container" *ngIf="status == 'loading'">
     <h2>loading...</h2>
@@ -37,7 +38,9 @@
             src="{{ pokemon.sprites.front_default }}"
             alt=""
           />
-          <h1>{{ pokemon.name }}</h1>
+          <a [routerLink]="['/pokemon', { pokemonId: pokemon.id }]">
+            <h1>{{ pokemon.name }}</h1>
+          </a>
         </div>
 
         <div>

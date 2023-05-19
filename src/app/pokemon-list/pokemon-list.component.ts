@@ -77,4 +77,16 @@ export class PokemonListComponent implements OnInit {
     this.viewPokemon = this.initialPokemon;
     this.view = '';
   }
+
+  handleSubmit(e: any, pokemonName: string) {
+    e.preventDefault();
+    this.searchPokemon(pokemonName);
+  }
+
+  handleKeyUp(e: any, pokemonName: string) {
+    e.preventDefault();
+    if (e.keycode === 13) {
+      this.searchPokemon(pokemonName);
+    }
+  }
 }

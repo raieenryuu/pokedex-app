@@ -1,0 +1,68 @@
+<div *ngIf="status == 'loading'" class="container">
+  <h2>Loading...</h2>
+</div>
+
+<div *ngIf="status == 'error'" id="error-message" class="container">
+  <h2>An error has ocurred :( Reload the page and try again</h2>
+</div>
+<div *ngIf="status == 'ready' && pokemon">
+  <div *ngIf="status == 'ready' && pokemon" class="pokemon-container">
+    <div>
+      <h1 class="container">{{ pokemon.name.toUpperCase() }}</h1>
+      <div class="pokemon-images">
+        <div>
+          <img
+            id="pokemon-img"
+            src="{{ pokemon.sprites.front_default }}"
+            alt=""
+          />
+        </div>
+
+        <div>
+          <img
+            id="pokemon-img"
+            src="{{ pokemon.sprites.back_default }}"
+            alt=""
+          />
+        </div>
+
+        <div>
+          <img
+            id="pokemon-img"
+            src="{{ pokemon.sprites.front_shiny_female }}"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h1>STATS</h1>
+      <p>Type: {{ pokemon.types[0].type.name }}</p>
+      <p id="height-line">Height: {{ pokemon.height }}</p>
+      <p id="life-line">Life: {{ pokemon.stats[0].base_stat }}</p>
+      <p id="attack-line">Attack: {{ pokemon.stats[1].base_stat }}</p>
+      <p id="defense-line">Defense: {{ pokemon.stats[2].base_stat }}</p>
+    </div>
+
+    <div>
+      <h1>ABILITIES</h1>
+      <div
+        class="abilities-container"
+        *ngFor="let ability of pokemon.abilities"
+      >
+        <p>{{ ability.ability.name.toUpperCase() }}</p>
+      </div>
+    </div>
+
+    <div>
+      <h1>MOVES</h1>
+      <div
+        class="moves-container"
+        *ngFor="let move of pokemon.moves.splice(0, 5)"
+      >
+        <p>{{ move.move.name.toLocaleUpperCase() }}</p>
+      </div>
+    </div>
+  </div>
+</div>

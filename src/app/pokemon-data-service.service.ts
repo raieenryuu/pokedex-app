@@ -45,4 +45,10 @@ export class PokemonDataService {
     }
     return pokemons;
   }
+
+  async getPokemonById(id: number) {
+    let pokemon = await axios.get<Pokemon>(`${this.url}/${id}`);
+
+    return pokemon.data;
+  }
 }

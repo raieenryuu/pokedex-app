@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.pokemon-container {
+  display: flex;
+  justify-content: center;
+}
+
+.pokemon-container {
+  background-color: lightblue;
+  border: 3px solid #003060;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 400px;
+  min-height: 600px;
+  margin-top: 40px;
+}
+
+.pokemon-images {
+  display: flex;
+}
+
+#attack-line {
+  color: red;
+}
+
+#life-line {
+  color: green;
+}
+
+#defense-line {
+  color: blue;
+}
+
+#height-line {
+  color: #8913c0;
+}
+
+#pokemon-img {
+  width: 150px;
+}
+
+#error-message {
+  color: red;
+}
+
+.abilities-container {
+  color: blueviolet;
+}
+
+.moves-container {
+  color: green;
+}
