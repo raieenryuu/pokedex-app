@@ -101,6 +101,15 @@ export class PokemonListComponent implements OnInit, OnDestroy {
     let pokemons = this.cachedUrls?.results.filter((pokemon) =>
       pokemon.name.includes(name.toLowerCase())
     );
+
+    console.log(pokemons);
+
+    if (pokemons?.length == 0) {
+      this.viewPokemon = [];
+      this.status = 'ready';
+      return;
+    }
+
     const searchSubscription = this.pokemonDataService
       .getPokemonsByUrls(pokemons)
       .subscribe({
