@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PokemonDataService } from '../pokemon-data-service.service';
 import { ApiResponse, Pokemon } from '../types/pokemon-types';
-
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'app-pokemon-list',
   templateUrl: './pokemon-list.component.html',
   styleUrls: ['./pokemon-list.component.scss'],
 })
-export class PokemonListComponent implements OnInit {
+export class PokemonListComponent implements OnInit, OnDestroy {
   cachedUrls: ApiResponse | null = null;
   viewPokemon: Pokemon[] = [];
   initialPokemon: Pokemon[] = [];
@@ -20,40 +20,75 @@ export class PokemonListComponent implements OnInit {
 
   twoWayInput = '';
 
+  subscriptions: Subscription[] = [];
+
   constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit(): void {
-    this.pokemonDataService
+    const subscriptionUrls = this.pokemonDataService
       .getAllPokemonUrls()
-      .then((urls) => {
-        this.cachedUrls = urls;
+      .subscribe({
+        next: (returnApi) => {
+          this.cachedUrls = returnApi;
 
-        return this.pokemonDataService.getPokemons(
-          this.offset,
-          this.cachedUrls
-        );
-      })
-      .then((pokemons) => {
-        this.viewPokemon = pokemons;
-        this.initialPokemon = pokemons;
+          const initialPokemonSubscription = this.pokemonDataService
+            .getPokemons(this.offset, returnApi)
+            ?.subscribe({
+              next: (value) => {
+                this.initialPokemon = value;
+                this.viewPokemon = value;
+                this.status = 'ready';
+              },
+              error: () => {
+                this.status = 'error';
+              },
+            });
 
-        this.status = 'ready';
-      })
-      .catch((err) => (this.status = 'error'));
+          this.subscriptions.push(initialPokemonSubscription);
+        },
+        error: () => {
+          this.status = 'error';
+        },
+      });
+
+    this.subscriptions.push(subscriptionUrls);
+
+    let initialPokemonSubscription = this.pokemonDataService
+      .getPokemons(this.offset, this.cachedUrls)
+      ?.subscribe({
+        next: (value) => {
+          this.initialPokemon = value;
+          this.viewPokemon = value;
+          this.status = 'ready';
+        },
+        error: () => {
+          this.status = 'error';
+        },
+      });
+
+    this.subscriptions.push(initialPokemonSubscription);
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
   loadMorePokemons() {
     this.buttonStatus = 'loading';
-    this.pokemonDataService
+    const loadSubscription = this.pokemonDataService
       .getPokemons(this.offset + 9, this.cachedUrls)
-      .then((pokemons) => {
-        this.viewPokemon = [...this.viewPokemon, ...pokemons];
+      .pipe()
+      ?.subscribe({
+        next: (value) => {
+          this.viewPokemon = [...this.viewPokemon, ...value];
+          this.status = 'ready';
+          this.buttonStatus = 'ready';
+        },
+        error: () => {
+          this.status = 'error';
+        },
+      });
 
-        this.offset += 9;
-
-        this.buttonStatus = 'ready';
-      })
-      .catch((error) => (this.status = 'error'));
+    this.subscriptions.push(loadSubscription);
   }
 
   searchPokemon(name: string) {
@@ -66,15 +101,20 @@ export class PokemonListComponent implements OnInit {
     let pokemons = this.cachedUrls?.results.filter((pokemon) =>
       pokemon.name.includes(name.toLowerCase())
     );
-    this.pokemonDataService
+    const searchSubscription = this.pokemonDataService
       .getPokemonsByUrls(pokemons)
-      .then((pokemons) => {
-        this.viewPokemon = pokemons;
-        this.status = 'ready';
-      })
-      .catch((error) => {
-        this.status = 'error';
+      .subscribe({
+        next: (pokemons) => {
+          this.viewPokemon = pokemons;
+          this.status = 'ready';
+          this.buttonStatus = 'ready';
+        },
+        error: () => {
+          this.status = 'error';
+        },
       });
+
+    this.subscriptions.push(searchSubscription);
   }
 
   cleanSearch() {

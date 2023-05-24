@@ -2,52 +2,49 @@ import { Injectable } from '@angular/core';
 import { ApiResponse, Pokemon, Result } from './types/pokemon-types';
 import { environment } from 'src/environments/environment';
 import axios from 'axios';
+import { HttpClient } from '@angular/common/http';
+
+import { Observable, forkJoin, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PokemonDataService {
+  constructor(private http: HttpClient) {}
   private url = environment.pokemonUrl;
 
-  async getPokemons(offset: number, pokemonUrls: ApiResponse | null) {
-    if (pokemonUrls) {
-      let pokemons: Pokemon[] = [];
+  getPokemons(offset: number, pokemonUrls: ApiResponse | null) {
+    let pokemonObservables: Observable<Pokemon>[] = [];
 
-      for (let i = offset; i < offset + 9; i++) {
-        await axios
-          .get<Pokemon>(pokemonUrls.results[i].url)
-          .then((res) => pokemons.push(res.data));
-      }
-
-      return pokemons;
+    if (!pokemonUrls) {
+      return forkJoin(pokemonObservables);
+    }
+    for (let i = offset; i < offset + 9; i++) {
+      pokemonObservables.push(
+        this.http.get<Pokemon>(pokemonUrls.results[i].url)
+      );
     }
 
-    return [];
+    return forkJoin(pokemonObservables);
   }
 
-  async getAllPokemonUrls() {
-    let urls = await axios.get<ApiResponse>(
-      `${this.url}?offset=0&limit=${1281}`
-    );
-
-    return urls.data;
+  getAllPokemonUrls() {
+    return this.http.get<ApiResponse>(`${this.url}?offset=0&limit=${1281}`);
   }
 
-  async getPokemonsByUrls(urls: Result[] | undefined) {
-    let pokemons: Pokemon[] = [];
+  getPokemonsByUrls(urls: Result[] | undefined) {
+    let pokemons: Observable<Pokemon>[] = [];
 
     if (!urls) {
-      return pokemons;
+      return forkJoin(pokemons);
     }
     for (let url of urls) {
-      await axios.get<Pokemon>(url.url).then((res) => pokemons.push(res.data));
+      pokemons.push(this.http.get<Pokemon>(url.url));
     }
-    return pokemons;
+    return forkJoin(pokemons);
   }
 
-  async getPokemonById(id: number) {
-    let pokemon = await axios.get<Pokemon>(`${this.url}/${id}`);
-
-    return pokemon.data;
+  getPokemonById(id: number) {
+    return this.http.get<Pokemon>(`${this.url}/${id}`);
   }
 }

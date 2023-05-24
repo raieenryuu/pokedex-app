@@ -1,3 +1,4 @@
+$darkBlueColor: #003060;
 .container {
   display: flex;
   justify-content: center;
@@ -10,7 +11,7 @@
 
 .pokemon-container {
   background-color: lightblue;
-  border: 3px solid #003060;
+  border: 3px solid $darkBlueColor;
   display: flex;
   flex-direction: row;
   align-items: center;
