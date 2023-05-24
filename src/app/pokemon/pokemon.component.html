@@ -6,9 +6,9 @@
   <h2>An error has ocurred :( Reload the page and try again</h2>
 </div>
 <div *ngIf="status == 'ready' && pokemon">
-  <div *ngIf="status == 'ready' && pokemon" class="pokemon-container">
+  <div class="pokemon-container">
     <div>
-      <h1 class="container">{{ pokemon.name.toUpperCase() }}</h1>
+      <h1 class="container">{{ pokemon.name | uppercase }}</h1>
       <div class="pokemon-images">
         <div>
           <img
@@ -51,7 +51,7 @@
         class="abilities-container"
         *ngFor="let ability of pokemon.abilities"
       >
-        <p>{{ ability.ability.name.toUpperCase() }}</p>
+        <p>{{ ability.ability.name | uppercase }}</p>
       </div>
     </div>
 
@@ -59,9 +59,9 @@
       <h1>MOVES</h1>
       <div
         class="moves-container"
-        *ngFor="let move of pokemon.moves.splice(0, 5)"
+        *ngFor="let move of pokemon.moves | slice : 0 : 5"
       >
-        <p>{{ move.move.name.toLocaleUpperCase() }}</p>
+        <p>{{ move.move.name | uppercase }}</p>
       </div>
     </div>
   </div>

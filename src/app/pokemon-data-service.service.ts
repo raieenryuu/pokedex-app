@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ApiResponse, Pokemon, Result } from './types/pokemon-types';
+import { environment } from 'src/environments/environment';
 import axios from 'axios';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PokemonDataService {
-  private url = 'https://pokeapi.co/api/v2/pokemon';
-
-  private limit = 9;
+  private url = environment.pokemonUrl;
 
   async getPokemons(offset: number, pokemonUrls: ApiResponse | null) {
     if (pokemonUrls) {

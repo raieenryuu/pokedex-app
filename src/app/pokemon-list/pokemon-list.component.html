@@ -1,11 +1,11 @@
 <div>
   <div class="container">
-    <form (ngSubmit)="handleSubmit($event, searchPokemonName.value)">
+    <form (ngSubmit)="handleSubmit($event)">
       <input
         type="text"
         placeholder="Enter a pokemon name - at least three letters"
-        (keyup)="handleKeyUp($event, searchPokemonName.value)"
-        #searchPokemonName
+        (keyup.enter)="handleKeyUp()"
+        [(ngModel)]="searchText"
       />
       <button
         type="submit"

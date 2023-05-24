@@ -16,6 +16,10 @@ export class PokemonListComponent implements OnInit {
   offset = 0;
   view = '';
 
+  searchText: string = '';
+
+  twoWayInput = '';
+
   constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit(): void {
@@ -78,15 +82,12 @@ export class PokemonListComponent implements OnInit {
     this.view = '';
   }
 
-  handleSubmit(e: any, pokemonName: string) {
+  handleSubmit(e: any) {
     e.preventDefault();
-    this.searchPokemon(pokemonName);
+    this.searchPokemon(this.searchText);
   }
 
-  handleKeyUp(e: any, pokemonName: string) {
-    e.preventDefault();
-    if (e.keycode === 13) {
-      this.searchPokemon(pokemonName);
-    }
+  handleKeyUp() {
+    this.searchPokemon(this.searchText);
   }
 }

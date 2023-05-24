@@ -5,16 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'pokedex';
-
-  private url = 'https://pokeapi.co/api/v2/pokemon';
-
-  pokemonData: any;
-
-  ngOnInit() {
-    fetch(this.url)
-      .then((res) => res.json())
-      .then((pokemonData) => (this.pokemonData = pokemonData));
-  }
 }
