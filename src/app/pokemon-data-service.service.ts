@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import axios from 'axios';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, forkJoin, throwError } from 'rxjs';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -35,8 +35,8 @@ export class PokemonDataService {
   getPokemonsByUrls(urls: Result[] | undefined) {
     let pokemons: Observable<Pokemon>[] = [];
 
-    if (!urls) {
-      return forkJoin(pokemons);
+    if (!urls?.length) {
+      return of([]);
     }
     for (let url of urls) {
       pokemons.push(this.http.get<Pokemon>(url.url));
